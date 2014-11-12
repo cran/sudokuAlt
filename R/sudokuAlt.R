@@ -38,6 +38,17 @@ as.sudoku.matrix <- function(x, ...) {
   structure(x, class = "sudoku")
 }
 
+##' Construct a Sudoku Game Object
+##' 
+##' Identity function for sudoku objects
+##' @method as.sudoku sudoku
+##' @export
+##' @param x A sudoku object
+##' @param ... other arguments (ignored)
+##' @return the input sudoku object
+##' @author Bill Venables
+as.sudoku.sudoku <- function(x, ...) x
+
 ##' Format a Date Relative to the Current Date
 ##'
 ##' Internal function used by fetchUKGame()
@@ -48,7 +59,7 @@ as.sudoku.matrix <- function(x, ...) {
 ##' @export daysAgo
 ##' @examples
 ##' daysAgo()  ## today
-##' daysAgo(7) ## a week ago
+##' daysAgo(7) ## a week ago 
 ##' @author Bill Venables
 daysAgo <- function(n = 0, warn = TRUE) {
   if(warn && any(n > 30 | n < 0))
@@ -59,17 +70,21 @@ daysAgo <- function(n = 0, warn = TRUE) {
 
 ##' Retrieve a Sudoku Game
 ##'
-##' Connects to http://www.sudoku.org.uk/DailySudoku.asp and retrieves
+##' Connects to \url{http://www.sudoku.org.uk/DailySudoku.asp} and retrieves
 ##' the sudoku game from 'day' days ago.  Based on a function from a
-##' related sudoku package, sudoku::fetchSudokuUK with minor changes.
+##' related sudoku package, \code{sudoku::fetchSudokuUK} with minor changes.
 ##' @title Retrieve a Sudoku from the UK Site
 ##' @param day positive integer < 30, how many days ago? or NULL for
-##' the current day
-##' @return The published sudoku game
+##' the most recently published game.
+##' @return The published sudoku game as a sudoku object.
 ##' @examples
 ##' \dontrun{
-##' (g0 <- fetchUKGame())  ## today's game
-##' (g3 <- fetchUKGame(3)) ## game from 3 days ago
+##' (g0 <- fetchUKGame())  ## The newest game
+##' (g3 <- fetchUKGame(3)) ## game from 3 days ago (according to GMT)
+##' if(require(sudoku)) {  ## the original solver
+##'   g0a <- as.sudoku(fetchSudokuUK())  
+##'   identical(g0, g0a)   ## should be TRUE
+##' }
 ##' }
 ##' @export fetchUKGame
 ##' @author Bill Venables
@@ -95,6 +110,11 @@ fetchUKGame <- function(day = NULL) {
 ##' @param n Size of the game, n^2 x n^2
 ##' @param gaps Number of holes to leave for the solution
 ##' @param maxit Number of tries before giving up.
+##' @examples 
+##' set.seed(54321)
+##' (m <- makeGame())
+##' sm <- solveGame(m)
+##' plot(sm)
 ##' @return a sudoku game
 ##' @export makeGame
 ##' @author Bill Venables
@@ -108,6 +128,7 @@ makeGame <- function(n = 3, gaps = ceiling(2*n^4/3), maxit = 5) {
   
   if(iter == maxit) stop("Maximum number of tries exceeded.")
   is.na(solved[sample(length(solved), gaps)]) <- TRUE
+  attr(solved, "game") <- NULL
   solved
 }
 

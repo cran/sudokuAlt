@@ -7,23 +7,27 @@ fetchUKGame(day = NULL)
 }
 \arguments{
 \item{day}{positive integer < 30, how many days ago? or NULL for
-the current day}
+the most recently published game.}
 }
 \value{
-The published sudoku game
+The published sudoku game as a sudoku object.
 }
 \description{
 Retrieve a Sudoku Game
 }
 \details{
-Connects to http://www.sudoku.org.uk/DailySudoku.asp and retrieves
+Connects to \url{http://www.sudoku.org.uk/DailySudoku.asp} and retrieves
 the sudoku game from 'day' days ago.  Based on a function from a
-related sudoku package, sudoku::fetchSudokuUK with minor changes.
+related sudoku package, \code{sudoku::fetchSudokuUK} with minor changes.
 }
 \examples{
 \dontrun{
-(g0 <- fetchUKGame())  ## today's game
-(g3 <- fetchUKGame(3)) ## game from 3 days ago
+(g0 <- fetchUKGame())  ## The newest game
+(g3 <- fetchUKGame(3)) ## game from 3 days ago (according to GMT)
+if(require(sudoku)) {  ## the original solver
+  g0a <- as.sudoku(fetchSudokuUK())
+  identical(g0, g0a)   ## should be TRUE
+}
 }
 }
 \author{

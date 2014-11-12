@@ -22,6 +22,12 @@ Construct a Random Sudoku Game
 Construcs a sudoku game for given n, 2 <= n <= 5.
 n = 5 can be problematical.
 }
+\examples{
+set.seed(54321)
+(m <- makeGame())
+sm <- solveGame(m)
+plot(sm)
+}
 \author{
 Bill Venables
 }
