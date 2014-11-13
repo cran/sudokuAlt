@@ -24,7 +24,7 @@ using 1-9 for n=2 or 3, and LETTERS[1:(n^2)] for n = 4 or 5.
 \examples{
 M <- as.sudoku(matrix("", 16, 16))
 M[1:4, 1:4] <- matrix(LETTERS[1:16], 4, 4, byrow = TRUE)
-sM <- solveGame(M)
+sM <- solve(M)
 plot(sM)
 }
 \author{

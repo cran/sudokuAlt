@@ -26,7 +26,7 @@ the game is solved
 }
 \examples{
 set.seed(1234)
-plot(solveGame(seedGame(4)))
+plot(solve(seedGame(4)))
 }
 \author{
 Bill Venables

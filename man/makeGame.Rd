@@ -25,7 +25,7 @@ n = 5 can be problematical.
 \examples{
 set.seed(54321)
 (m <- makeGame())
-sm <- solveGame(m)
+sm <- solve(m)
 plot(sm)
 }
 \author{

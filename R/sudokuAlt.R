@@ -12,7 +12,7 @@
 ##' @examples
 ##' M <- as.sudoku(matrix("", 16, 16))
 ##' M[1:4, 1:4] <- matrix(LETTERS[1:16], 4, 4, byrow = TRUE)
-##' sM <- solveGame(M)
+##' sM <- solve(M)
 ##' plot(sM)
 ##' @author Bill Venables
 as.sudoku <- function(x, ...)
@@ -51,7 +51,7 @@ as.sudoku.sudoku <- function(x, ...) x
 
 ##' Format a Date Relative to the Current Date
 ##'
-##' Internal function used by fetchUKGame()
+##' Internal function used by fetchUKGame().
 ##' @title Format a Past Date
 ##' @param n A positive integer for how many days ago
 ##' @param warn Issue a warning if n <= 0 or n > 30
@@ -71,7 +71,7 @@ daysAgo <- function(n = 0, warn = TRUE) {
 ##' Retrieve a Sudoku Game
 ##'
 ##' Connects to \url{http://www.sudoku.org.uk/DailySudoku.asp} and retrieves
-##' the sudoku game from 'day' days ago.  Based on a function from a
+##' the sudoku game from \code{day} days ago.  Based on a function from a
 ##' related sudoku package, \code{sudoku::fetchSudokuUK} with minor changes.
 ##' @title Retrieve a Sudoku from the UK Site
 ##' @param day positive integer < 30, how many days ago? or NULL for
@@ -79,7 +79,7 @@ daysAgo <- function(n = 0, warn = TRUE) {
 ##' @return The published sudoku game as a sudoku object.
 ##' @examples
 ##' \dontrun{
-##' (g0 <- fetchUKGame())  ## The newest game
+##' (g0 <- fetchUKGame())  ## The game for today (according to GMT)
 ##' (g3 <- fetchUKGame(3)) ## game from 3 days ago (according to GMT)
 ##' if(require(sudoku)) {  ## the original solver
 ##'   g0a <- as.sudoku(fetchSudokuUK())  
@@ -113,7 +113,7 @@ fetchUKGame <- function(day = NULL) {
 ##' @examples 
 ##' set.seed(54321)
 ##' (m <- makeGame())
-##' sm <- solveGame(m)
+##' sm <- solve(m)
 ##' plot(sm)
 ##' @return a sudoku game
 ##' @export makeGame
@@ -148,7 +148,7 @@ makeGame <- function(n = 3, gaps = ceiling(2*n^4/3), maxit = 5) {
 ##' @return NULL
 ##' @examples
 ##' set.seed(1234)
-##' plot(solveGame(seedGame(4)))
+##' plot(solve(seedGame(4)))
 ##' @author Bill Venables
 plot.sudoku <- function(x, ..., cex=2-(n-3)/2,
                         colSolution = "grey", colGame = "fire brick") {
@@ -220,7 +220,7 @@ print.sudoku <- function(x, ...) {
 ##' @examples
 ##' set.seed(2345)
 ##' g <- seedGame(3)
-##' sg <- solveGame(g) ## a completed random game
+##' sg <- solve(g) ## a completed random game
 ##' plot(sg)
 ##' @author Bill Venables
 seedGame <- function(n = 3) {
@@ -234,16 +234,34 @@ seedGame <- function(n = 3) {
   structure(game, class = "sudoku")
 }
 
+##' Solve a Sudoku Puzzle
+##' 
+##' An alternative front end to \code{solveGame} as a method for the base generic function \code{solve}.
+##' @title Solve a Sudoku Puzzle
+##' @method solve sudoku
+##' @export
+##' @param a A sudoku game object to be solved
+##' @param ... Extra arguments (curently ignored)
+##' @return a solved game, or NULL if no solution exists.
+##' @examples
+##' set.seed(1234)
+##' (g <- makeGame(3))
+##' (sg <- solve(g))
+##' plot(sg)
+##' @author Bill Venables
+solve.sudoku <- function(a, ...) {
+  solveGame(a)  
+}
+
 ##' Solve a Sudoku Game
 ##'
 ##' Given a sudoku game to be solved, find the solution.  IMPORTANT:
-##' games are represented as n^2xn^2 character matrices, using 1-9 for
+##' games are represented as n^2 x n^2 character matrices, using 1-9 for
 ##' n=2 or 3, and LETTERS[1:(n^2)] for n = 4 or 5.
 ##' @title Solve a Sudoku Game
 ##' @param game The game to be solved
-##' @param n The size of the game is n^2 x n^2
 ##' @return A solved sudoku game object if one found, or NULL if no
-##' solution exists.
+##' solution exists.  The original game is attached as an attribute.
 ##' @examples
 ##' set.seed(1234)
 ##' (g <- makeGame(3))
@@ -251,7 +269,8 @@ seedGame <- function(n = 3) {
 ##' plot(sg)
 ##' @export
 ##' @author Bill Venables
-solveGame <- function(game, n = as.integer(round(sqrt(nrow(game))))) {
+solveGame <- function(game) {
+  n <- as.integer(round(sqrt(nrow(game))))  ## overkill?
   set <- if(n <= 3) {
     as.character(1:n^2)
   } else {
@@ -288,8 +307,8 @@ solveGame <- function(game, n = as.integer(round(sqrt(nrow(game))))) {
   findSolution <- function(game) {
     if(invalid(game)) return(FALSE)
     
-    while(anyNA(game)) {  ## anyNA() is only  in R 3.0.2 and later.
-      holes <- which(is.na(game), arr.ind = TRUE)  ## a splendid trick!
+    while(anyNA(game)) {  ## anyNA() is only  in R 3.1.0 and later.
+      holes <- which(is.na(game), arr.ind = TRUE)  ## a good trick!
       nr <- nrow(holes)
       fills <- vector("list", nr)
       lengths <- integer(nr)
@@ -326,3 +345,23 @@ solveGame <- function(game, n = as.integer(round(sqrt(nrow(game))))) {
   structure(toMatrix(solution), game = game, class = "sudoku")
 }
 
+##' Retrieve the Original from a Solved Game
+##' 
+##' Convenience function for accessing an original from a solved game.
+##' If the game is unsolved, the object itself is returned.
+##' @title Retrieve the Original from a Solved Game
+##' @param x a sudoku object
+##' @export originalGame
+##' @return The original sudoku game corresponding to the solution, 
+##' or object itself if the game is unsolved
+##' @examples
+##' set.seed(666)
+##' (sg <- solve(seedGame()))
+##' originalGame(sg)
+##' @author Bill Venables
+originalGame <- function(x) {
+  if(!inherits(x, "sudoku"))
+    stop(sprintf("%s is not a sudoku object", deparse(substitute(x))))
+  g <- attr(x, "game")
+  if(is.null(g)) x else g
+}

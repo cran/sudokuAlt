@@ -17,12 +17,12 @@ Retrieve a Sudoku Game
 }
 \details{
 Connects to \url{http://www.sudoku.org.uk/DailySudoku.asp} and retrieves
-the sudoku game from 'day' days ago.  Based on a function from a
+the sudoku game from \code{day} days ago.  Based on a function from a
 related sudoku package, \code{sudoku::fetchSudokuUK} with minor changes.
 }
 \examples{
 \dontrun{
-(g0 <- fetchUKGame())  ## The newest game
+(g0 <- fetchUKGame())  ## The game for today (according to GMT)
 (g3 <- fetchUKGame(3)) ## game from 3 days ago (according to GMT)
 if(require(sudoku)) {  ## the original solver
   g0a <- as.sudoku(fetchSudokuUK())

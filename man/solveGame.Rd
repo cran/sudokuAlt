@@ -3,23 +3,21 @@
 \alias{solveGame}
 \title{Solve a Sudoku Game}
 \usage{
-solveGame(game, n = as.integer(round(sqrt(nrow(game)))))
+solveGame(game)
 }
 \arguments{
 \item{game}{The game to be solved}
-
-\item{n}{The size of the game is n^2 x n^2}
 }
 \value{
 A solved sudoku game object if one found, or NULL if no
-solution exists.
+solution exists.  The original game is attached as an attribute.
 }
 \description{
 Solve a Sudoku Game
 }
 \details{
 Given a sudoku game to be solved, find the solution.  IMPORTANT:
-games are represented as n^2xn^2 character matrices, using 1-9 for
+games are represented as n^2 x n^2 character matrices, using 1-9 for
 n=2 or 3, and LETTERS[1:(n^2)] for n = 4 or 5.
 }
 \examples{

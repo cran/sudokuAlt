@@ -21,7 +21,7 @@ positions.
 \examples{
 set.seed(2345)
 g <- seedGame(3)
-sg <- solveGame(g) ## a completed random game
+sg <- solve(g) ## a completed random game
 plot(sg)
 }
 \author{

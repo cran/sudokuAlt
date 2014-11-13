@@ -17,7 +17,7 @@ A character string of the form "dd/mm/yy"
 Format a Date Relative to the Current Date
 }
 \details{
-Internal function used by fetchUKGame()
+Internal function used by fetchUKGame().
 }
 \examples{
 daysAgo()  ## today
