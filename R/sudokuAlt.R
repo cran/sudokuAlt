@@ -70,7 +70,7 @@ daysAgo <- function(n = 0, warn = TRUE) {
 
 ##' Retrieve a Sudoku Game
 ##'
-##' Connects to \url{http://www.sudoku.org.uk/DailySudoku.asp} and retrieves
+##' Connects to \code{http://www.sudoku.org.uk/DailySudoku.asp} and retrieves
 ##' the sudoku game from \code{day} days ago.  Based on a function from a
 ##' related sudoku package, \code{sudoku::fetchSudokuUK} with minor changes.
 ##' @title Retrieve a Sudoku from the UK Site
@@ -90,17 +90,58 @@ daysAgo <- function(n = 0, warn = TRUE) {
 ##' @author Bill Venables
 fetchUKGame <- function(day = NULL) {
   sudoku_UK <- "http://www.sudoku.org.uk/DailySudoku.asp"
-  if(!is.null(day))
-      sudoku_UK <- paste0(sudoku_UK, "?day=", daysAgo(day))
-  con <- url(sudoku_UK)
-  game <- readLines(con)
-  close(con)
-  game <- grep("^<td .*</td>$", game, value = TRUE)
-  if(length(game) != 81)
-      stop("No game found. Check the date?")
-  game <- sub("^<td .*(.)</td>$", "\\1", game)
-  as.sudoku(matrix(game, 9, 9, byrow = TRUE))
+  stop("\"", sudoku_UK, "\" appears to be offline.  Try Australian game instead")
+  
+  ## if(!is.null(day))
+  ##     sudoku_UK <- paste0(sudoku_UK, "?day=", daysAgo(day))
+  ## con <- url(sudoku_UK)
+  ## game <- readLines(con)
+  ## close(con)
+  ## game <- grep("^<td .*</td>$", game, value = TRUE)
+  ## if(length(game) != 81)
+  ##     stop("No game found. Check the date?")
+  ## game <- sub("^<td .*(.)</td>$", "\\1", game)
+  ## as.sudoku(matrix(game, 9, 9, byrow = TRUE))
 }
+
+##' Retrieve a Sudoku Game
+##'
+##' Connects to \url{http://www.sudoku.com.au} and retrieves
+##' the sudoku game from \code{day} days ago.  Based on a function from a
+##' related sudoku package, \code{sudoku::fetchSudokuUK} with minor changes.
+##' @title Retrieve a Sudoku from the AU Site
+##' @param day non-negative integer, how many days ago? zero for
+##' today's game.
+##' @return The published sudoku game as a sudoku object.
+##' @examples
+##' \dontrun{
+##' (g0 <- fetchAUGame())  ## The game for today (according to GMT)
+##' (g3 <- fetchAUGame(3)) ## game from 3 days ago (according to GMT)
+##' if(require(sudoku)) {  ## the original solver
+##'   g0a <- as.sudoku(fetchSudokuAU())  
+##'   identical(g0, g0a)   ## should be TRUE
+##' }
+##' }
+##' @export fetchAUGame
+##' @author Bill Venables
+fetchAUGame <- function(day = 0) {
+  stopifnot(is.numeric(day) && length(day) == 1 && day %% 1 == 0)
+  sudoku_AU <- "http://www.sudoku.com.au"
+  sday <- as.Date(strptime(date(), "%a %b %d %H:%M:%S %Y")) - as.integer(day)
+  sday <- as.POSIXlt(sday)
+  game <- paste0(sudoku_AU, "/5E", sday$mday, "-", sday$mon + 1, "-",
+                 sday$year + 1900, "-sudoku.aspx")
+  con <- url(game)
+  txt <- readLines(con)
+  close(con)
+  txt <- txt[grep("iGridUnsolved", txt)]
+  txt <- sub("^.*\\(", "", txt)
+  txt <- sub("\\);$", "", txt)
+  txt <- as.numeric(strsplit(txt, ",")[[1]])
+  txt <- matrix(txt, ncol = 9, byrow = TRUE)
+  as.sudoku(txt)
+}
+
 
 ##' Construct a Random Sudoku Game
 ##'
@@ -262,6 +303,7 @@ solve.sudoku <- function(a, ...) {
 ##' @param game The game to be solved
 ##' @return A solved sudoku game object if one found, or NULL if no
 ##' solution exists.  The original game is attached as an attribute.
+##' @importFrom stats na.omit
 ##' @examples
 ##' set.seed(1234)
 ##' (g <- makeGame(3))
