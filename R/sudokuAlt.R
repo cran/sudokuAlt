@@ -77,6 +77,9 @@ daysAgo <- function(n = 0, warn = TRUE) {
 ##' @param day positive integer < 30, how many days ago? or NULL for
 ##' the most recently published game.
 ##' @return The published sudoku game as a sudoku object.
+##' @note the website www.sudoku.org.uk appears currently to be inoperative.
+##' This function is currently a stub.  Try fetchAUGame() instead, but note
+##' slightly different calling sequence.
 ##' @examples
 ##' \dontrun{
 ##' (g0 <- fetchUKGame())  ## The game for today (according to GMT)
@@ -112,24 +115,26 @@ fetchUKGame <- function(day = NULL) {
 ##' @title Retrieve a Sudoku from the AU Site
 ##' @param day non-negative integer, how many days ago? zero for
 ##' today's game.
+##' @param difficulty character string, how hard would you like it?
 ##' @return The published sudoku game as a sudoku object.
 ##' @examples
 ##' \dontrun{
-##' (g0 <- fetchAUGame())  ## The game for today (according to GMT)
-##' (g3 <- fetchAUGame(3)) ## game from 3 days ago (according to GMT)
-##' if(require(sudoku)) {  ## the original solver
-##'   g0a <- as.sudoku(fetchSudokuAU())  
-##'   identical(g0, g0a)   ## should be TRUE
-##' }
+##' (g0 <- fetchAUGame())           ## The 'easy' game for today 
+##' (g3 <- fetchAUGame(3, "tough")) ## 'tough' game from 3 days ago
+##' plot(solve(g3))                 ## Spoil the game!
 ##' }
 ##' @export fetchAUGame
 ##' @author Bill Venables
-fetchAUGame <- function(day = 0) {
+fetchAUGame <- function(day = 0, difficulty = c("easy", "medium", "hard", "tough")) {
   stopifnot(is.numeric(day) && length(day) == 1 && day %% 1 == 0)
+  difficulty <- match.arg(difficulty)
+  prefix <- c(easy = "5E", medium = "3M", hard = "2H", tough = "1V")
+  pre <- prefix[difficulty]
+  
   sudoku_AU <- "http://www.sudoku.com.au"
   sday <- as.Date(strptime(date(), "%a %b %d %H:%M:%S %Y")) - as.integer(day)
   sday <- as.POSIXlt(sday)
-  game <- paste0(sudoku_AU, "/5E", sday$mday, "-", sday$mon + 1, "-",
+  game <- paste0(sudoku_AU, "/", pre, sday$mday, "-", sday$mon + 1, "-",
                  sday$year + 1900, "-sudoku.aspx")
   con <- url(game)
   txt <- readLines(con)

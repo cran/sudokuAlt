@@ -1,12 +1,12 @@
-1082db819447ab0accc63d5504426c1f *DESCRIPTION
+3f522deeda250e35ce4f3b2193e60bbd *DESCRIPTION
 8035de56546ffafb791f407d15f0c553 *NAMESPACE
-cc29a332fd94571cf8d9451875ff805a *R/sudokuAlt.R
+cbb65653cefbc1d8d13d8e6dcf4b6fcf *R/sudokuAlt.R
 c49f1baecd30f435b3930a6ab1f5edec *man/as.sudoku.Rd
 29602279984ab27212bcb03ad252bbaf *man/as.sudoku.matrix.Rd
 12c205f39f89841c4a6a464af7e34064 *man/as.sudoku.sudoku.Rd
 6825bb4bcb8bb949c049bec5f08f6866 *man/daysAgo.Rd
-40324fff27da7a22f9d7ec89be757d17 *man/fetchAUGame.Rd
-e9f2baea081eedf67fe277fca1135769 *man/fetchUKGame.Rd
+034d4d230b48b623c1f2a35af28c4f3e *man/fetchAUGame.Rd
+68e0821bdde91c45bd1870a0cede0e41 *man/fetchUKGame.Rd
 76082b2a34fc5dbdd8bd89d404f7ad1c *man/makeGame.Rd
 b98cabf0636ec984bd6af2491d79312c *man/originalGame.Rd
 d6df2000f0bfb4aa4586f299dbefc49a *man/plot.sudoku.Rd

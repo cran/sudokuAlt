@@ -4,11 +4,13 @@
 \alias{fetchAUGame}
 \title{Retrieve a Sudoku from the AU Site}
 \usage{
-fetchAUGame(day = 0)
+fetchAUGame(day = 0, difficulty = c("easy", "medium", "hard", "tough"))
 }
 \arguments{
 \item{day}{non-negative integer, how many days ago? zero for
 today's game.}
+
+\item{difficulty}{character string, how hard would you like it?}
 }
 \value{
 The published sudoku game as a sudoku object.
@@ -23,12 +25,9 @@ related sudoku package, \code{sudoku::fetchSudokuUK} with minor changes.
 }
 \examples{
 \dontrun{
-(g0 <- fetchAUGame())  ## The game for today (according to GMT)
-(g3 <- fetchAUGame(3)) ## game from 3 days ago (according to GMT)
-if(require(sudoku)) {  ## the original solver
-  g0a <- as.sudoku(fetchSudokuAU())
-  identical(g0, g0a)   ## should be TRUE
-}
+(g0 <- fetchAUGame())           ## The 'easy' game for today
+(g3 <- fetchAUGame(3, "tough")) ## 'tough' game from 3 days ago
+plot(solve(g3))                 ## Spoil the game!
 }
 }
 \author{

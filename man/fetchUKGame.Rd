@@ -21,6 +21,11 @@ Connects to \code{http://www.sudoku.org.uk/DailySudoku.asp} and retrieves
 the sudoku game from \code{day} days ago.  Based on a function from a
 related sudoku package, \code{sudoku::fetchSudokuUK} with minor changes.
 }
+\note{
+the website www.sudoku.org.uk appears currently to be inoperative.
+This function is currently a stub.  Try fetchAUGame() instead, but note
+slightly different calling sequence.
+}
 \examples{
 \dontrun{
 (g0 <- fetchUKGame())  ## The game for today (according to GMT)
