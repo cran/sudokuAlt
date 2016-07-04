@@ -93,18 +93,22 @@ daysAgo <- function(n = 0, warn = TRUE) {
 ##' @author Bill Venables
 fetchUKGame <- function(day = NULL) {
   sudoku_UK <- "http://www.sudoku.org.uk/DailySudoku.asp"
-  stop("\"", sudoku_UK, "\" appears to be offline.  Try Australian game instead")
   
-  ## if(!is.null(day))
-  ##     sudoku_UK <- paste0(sudoku_UK, "?day=", daysAgo(day))
-  ## con <- url(sudoku_UK)
-  ## game <- readLines(con)
-  ## close(con)
-  ## game <- grep("^<td .*</td>$", game, value = TRUE)
-  ## if(length(game) != 81)
-  ##     stop("No game found. Check the date?")
-  ## game <- sub("^<td .*(.)</td>$", "\\1", game)
-  ## as.sudoku(matrix(game, 9, 9, byrow = TRUE))
+  if(!is.null(day))
+      sudoku_UK <- paste0(sudoku_UK, "?day=", daysAgo(day))
+  con <- url(sudoku_UK)
+  game <- tryCatch(readLines(con),
+                   error = function(e) {
+                     stop("\"", sudoku_UK, 
+                          "\" appears to be offline.",
+                          "  Try Australian game instead.")
+                   })
+  close(con)
+  game <- grep("^<td .*</td>$", game, value = TRUE)
+  if(length(game) != 81)
+      stop("No game found. Check the date?")
+  game <- sub("^<td .*(.)</td>$", "\\1", game)
+  as.sudoku(matrix(game, 9, 9, byrow = TRUE))
 }
 
 ##' Retrieve a Sudoku Game
@@ -137,7 +141,13 @@ fetchAUGame <- function(day = 0, difficulty = c("easy", "medium", "hard", "tough
   game <- paste0(sudoku_AU, "/", pre, sday$mday, "-", sday$mon + 1, "-",
                  sday$year + 1900, "-sudoku.aspx")
   con <- url(game)
-  txt <- readLines(con)
+  txt <- tryCatch(readLines(con),
+                  error = function(e) {
+                    stop("\"", sudoku_AU, 
+                         "\" appears to be offline.",
+                         "  Try the UK game instead.")
+                  })
+  ## txt <- readLines(con)
   close(con)
   txt <- txt[grep("iGridUnsolved", txt)]
   txt <- sub("^.*\\(", "", txt)
