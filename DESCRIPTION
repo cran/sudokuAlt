@@ -1,8 +1,8 @@
 Package: sudokuAlt
 Type: Package
 Title: Tools for Making and Spoiling Sudoku Games
-Version: 0.1-7
-Date: 2016-07-04
+Version: 0.1-9
+Date: 2016-12-05
 Depends: R (>= 3.1.0), stats
 Suggests: sudoku
 Imports: graphics
@@ -16,6 +16,7 @@ Description: Tools for making, retrieving, displaying and solving sudoku games.
     as examples of Latin Square designs with additional balance constraints.
 License: GPL (>= 2)
 NeedsCompilation: no
-Packaged: 2016-07-04 00:27:46 UTC; Bill
+RoxygenNote: 5.0.1
+Packaged: 2016-12-05 05:38:29 UTC; Bill
 Repository: CRAN
-Date/Publication: 2016-07-04 09:12:58
+Date/Publication: 2016-12-05 08:27:46

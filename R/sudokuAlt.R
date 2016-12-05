@@ -77,9 +77,6 @@ daysAgo <- function(n = 0, warn = TRUE) {
 ##' @param day positive integer < 30, how many days ago? or NULL for
 ##' the most recently published game.
 ##' @return The published sudoku game as a sudoku object.
-##' @note the website www.sudoku.org.uk appears currently to be inoperative.
-##' This function is currently a stub.  Try fetchAUGame() instead, but note
-##' slightly different calling sequence.
 ##' @examples
 ##' \dontrun{
 ##' (g0 <- fetchUKGame())  ## The game for today (according to GMT)
@@ -129,8 +126,8 @@ fetchUKGame <- function(day = NULL) {
 ##' }
 ##' @export fetchAUGame
 ##' @author Bill Venables
-fetchAUGame <- function(day = 0, difficulty = c("easy", "medium", "hard", "tough")) {
-  stopifnot(is.numeric(day) && length(day) == 1 && day %% 1 == 0)
+fetchAUGame <- function(day = 0, difficulty = c("tough", "hard", "medium", "easy")) {
+  stopifnot(is.numeric(day) && length(day) == 1 && day %% 1 == 0 && day >= 0)
   difficulty <- match.arg(difficulty)
   prefix <- c(easy = "5E", medium = "3M", hard = "2H", tough = "1V")
   pre <- prefix[difficulty]
