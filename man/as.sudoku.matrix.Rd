@@ -23,4 +23,3 @@ Coerce a matrix to an object that can be used as a sudoku game
 \author{
 Bill Venables
 }
-

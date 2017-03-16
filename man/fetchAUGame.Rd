@@ -33,4 +33,3 @@ plot(solve(g3))                 ## Spoil the game!
 \author{
 Bill Venables
 }
-

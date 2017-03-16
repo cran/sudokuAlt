@@ -34,4 +34,3 @@ if(require(sudoku)) {  ## the original solver
 \author{
 Bill Venables
 }
-

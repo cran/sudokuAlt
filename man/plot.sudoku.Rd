@@ -32,4 +32,3 @@ plot(solve(seedGame(4)))
 \author{
 Bill Venables
 }
-

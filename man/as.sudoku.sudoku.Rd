@@ -20,4 +20,3 @@ Identity function for sudoku objects
 \author{
 Bill Venables
 }
-

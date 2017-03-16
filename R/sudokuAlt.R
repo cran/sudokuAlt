@@ -301,6 +301,10 @@ seedGame <- function(n = 3) {
 ##' (g <- makeGame(3))
 ##' (sg <- solve(g))
 ##' plot(sg)
+##' g <- emptyGame(4)  # construct a patterned game
+##' diag(g) <- LETTERS[1:16]
+##' sg <- solve(g)
+##' plot(sg)
 ##' @author Bill Venables
 solve.sudoku <- function(a, ...) {
   solveGame(a)  
@@ -320,6 +324,10 @@ solve.sudoku <- function(a, ...) {
 ##' set.seed(1234)
 ##' (g <- makeGame(3))
 ##' (sg <- solveGame(g))
+##' plot(sg)
+##' g <- emptyGame(4)  # construct a patterned game
+##' diag(g) <- LETTERS[1:16]
+##' sg <- solve(g)
 ##' plot(sg)
 ##' @export
 ##' @author Bill Venables
@@ -418,4 +426,24 @@ originalGame <- function(x) {
     stop(sprintf("%s is not a sudoku object", deparse(substitute(x))))
   g <- attr(x, "game")
   if(is.null(g)) x else g
+}
+
+##' Construct a Vacant Game Structure
+##'
+##' Returns a vacant game structure to allow special patterns to
+##' be constructed, as shown in the example.
+##' @title Construct an empty game
+##' @param n an integer value between 2 and 5 inclusive.
+##' @return An empty sudoku game structure
+##' @examples
+##' g <- emptyGame(4)
+##' diag(g) <- LETTERS[1:16]
+##' sg <- solve(g)
+##' plot(sg)
+##' @export emptyGame
+##' @author Bill Venables
+emptyGame <- function(n = 3) {
+  if(length(n) != 1 || !is.numeric(n) || n %% 1 != 0 || n < 2 | n > 5)
+    stop("n must be a single integer between 2 and 5 inclusive")
+  structure(matrix(NA_character_, n^2, n^2), class = "sudoku")
 }

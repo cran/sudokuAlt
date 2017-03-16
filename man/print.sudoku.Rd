@@ -23,4 +23,3 @@ Prints a sudoku object in an easily recognisable form.
 \author{
 Bill Venables
 }
-

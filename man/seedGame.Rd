@@ -28,4 +28,3 @@ plot(sg)
 \author{
 Bill Venables
 }
-

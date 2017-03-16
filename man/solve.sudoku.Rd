@@ -25,8 +25,11 @@ set.seed(1234)
 (g <- makeGame(3))
 (sg <- solve(g))
 plot(sg)
+g <- emptyGame(4)  # construct a patterned game
+diag(g) <- LETTERS[1:16]
+sg <- solve(g)
+plot(sg)
 }
 \author{
 Bill Venables
 }
-

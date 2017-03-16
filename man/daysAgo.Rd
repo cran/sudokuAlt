@@ -27,4 +27,3 @@ daysAgo(7) ## a week ago
 \author{
 Bill Venables
 }
-

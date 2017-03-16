@@ -31,4 +31,3 @@ plot(sM)
 \author{
 Bill Venables
 }
-

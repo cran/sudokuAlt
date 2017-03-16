@@ -28,4 +28,3 @@ originalGame(sg)
 \author{
 Bill Venables
 }
-
