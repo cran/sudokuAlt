@@ -22,7 +22,7 @@ If the game is unsolved, the object itself is returned.
 }
 \examples{
 set.seed(666)
-(sg <- solve(seedGame()))
+seedGame() \%>\% solve \%>\% plot -> sg ## \%>\% imported from magrittr
 originalGame(sg)
 }
 \author{

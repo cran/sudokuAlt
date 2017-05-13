@@ -1,3 +1,8 @@
+##' @import magrittr
+##' @export 
+magrittr::`%>%` 
+
+
 ##' Construct a Sudoku Game Object
 ##'
 ##' Coerce an object to one that can be used as a sudoku game.
@@ -85,6 +90,7 @@ daysAgo <- function(n = 0, warn = TRUE) {
 ##'   g0a <- as.sudoku(fetchSudokuUK())  
 ##'   identical(g0, g0a)   ## should be TRUE
 ##' }
+##' g0 %>% solve %>% plot -> sg0 ## spoil the game
 ##' }
 ##' @export fetchUKGame
 ##' @author Bill Venables
@@ -120,9 +126,8 @@ fetchUKGame <- function(day = NULL) {
 ##' @return The published sudoku game as a sudoku object.
 ##' @examples
 ##' \dontrun{
-##' (g0 <- fetchAUGame())           ## The 'easy' game for today 
-##' (g3 <- fetchAUGame(3, "tough")) ## 'tough' game from 3 days ago
-##' plot(solve(g3))                 ## Spoil the game!
+##' fetchAUGame() %>% solve %>% plot -> gau           ## The 'tough' game for today 
+##' fetchAUGame(3, "easy") %>% solve %>% plot -> eau  ## 'easy' game from 3 days ago
 ##' }
 ##' @export fetchAUGame
 ##' @author Bill Venables
@@ -165,13 +170,13 @@ fetchAUGame <- function(day = 0, difficulty = c("tough", "hard", "medium", "easy
 ##' @param maxit Number of tries before giving up.
 ##' @examples 
 ##' set.seed(54321)
-##' (m <- makeGame())
-##' sm <- solve(m)
-##' plot(sm)
+##' makeGame() %>% solve %>% plot -> sg
+##' originalGame(sg)
+##' 
 ##' @return a sudoku game
 ##' @export makeGame
 ##' @author Bill Venables
-makeGame <- function(n = 3, gaps = ceiling(2*n^4/3), maxit = 5) {
+makeGame <- function(n = 3, gaps = ceiling(3*n^4/4), maxit = 5) {
   if(!missing(n) && (3 > n || n > 5))
       stop("Only cases n = 3, 4 or 5 are implemented. Sorry!")
   solved <- FALSE
@@ -198,10 +203,10 @@ makeGame <- function(n = 3, gaps = ceiling(2*n^4/3), maxit = 5) {
 ##' @param cex Character expansion factor 
 ##' @param colSolution colour to be used for the solution (if present)
 ##' @param colGame colour to be used for the original game
-##' @return NULL
+##' @return The sudoku game \code{x}, invisibly.
 ##' @examples
 ##' set.seed(1234)
-##' plot(solve(seedGame(4)))
+##' seedGame(4) %>% solve %>% plot -> sg
 ##' @author Bill Venables
 plot.sudoku <- function(x, ..., cex=2-(n-3)/2,
                         colSolution = "grey", colGame = "fire brick") {
@@ -223,7 +228,7 @@ plot.sudoku <- function(x, ..., cex=2-(n-3)/2,
   if(solved) {
     with(centres, text(X, Y, t(game), cex = cex, col=colGame, font=2))
   }
-  invisible()
+  invisible(x)
 }
 
 ##' Print a Sudoku Object
@@ -298,13 +303,13 @@ seedGame <- function(n = 3) {
 ##' @return a solved game, or NULL if no solution exists.
 ##' @examples
 ##' set.seed(1234)
-##' (g <- makeGame(3))
-##' (sg <- solve(g))
-##' plot(sg)
+##' makeGame(3, gaps = 59) %>% solve %>% plot -> sg
+##' originalGame(sg)
+##' 
 ##' g <- emptyGame(4)  # construct a patterned game
 ##' diag(g) <- LETTERS[1:16]
-##' sg <- solve(g)
-##' plot(sg)
+##' g %>% solve %>% plot -> sg
+##' sg
 ##' @author Bill Venables
 solve.sudoku <- function(a, ...) {
   solveGame(a)  
@@ -322,9 +327,9 @@ solve.sudoku <- function(a, ...) {
 ##' @importFrom stats na.omit
 ##' @examples
 ##' set.seed(1234)
-##' (g <- makeGame(3))
-##' (sg <- solveGame(g))
-##' plot(sg)
+##' makeGame(3, gaps = 60) %>% solve %>% plot -> sg
+##' (g <- originalGame(sg))
+##' 
 ##' g <- emptyGame(4)  # construct a patterned game
 ##' diag(g) <- LETTERS[1:16]
 ##' sg <- solve(g)
@@ -418,7 +423,7 @@ solveGame <- function(game) {
 ##' or object itself if the game is unsolved
 ##' @examples
 ##' set.seed(666)
-##' (sg <- solve(seedGame()))
+##' seedGame() %>% solve %>% plot -> sg ## %>% imported from magrittr
 ##' originalGame(sg)
 ##' @author Bill Venables
 originalGame <- function(x) {
@@ -438,8 +443,7 @@ originalGame <- function(x) {
 ##' @examples
 ##' g <- emptyGame(4)
 ##' diag(g) <- LETTERS[1:16]
-##' sg <- solve(g)
-##' plot(sg)
+##' g %>% solve %>% plot -> sg ## %>% imported from magrittr
 ##' @export emptyGame
 ##' @author Bill Venables
 emptyGame <- function(n = 3) {

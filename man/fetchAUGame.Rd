@@ -25,9 +25,8 @@ related sudoku package, \code{sudoku::fetchSudokuUK} with minor changes.
 }
 \examples{
 \dontrun{
-(g0 <- fetchAUGame())           ## The 'easy' game for today 
-(g3 <- fetchAUGame(3, "tough")) ## 'tough' game from 3 days ago
-plot(solve(g3))                 ## Spoil the game!
+fetchAUGame() \%>\% solve \%>\% plot -> gau           ## The 'tough' game for today 
+fetchAUGame(3, "easy") \%>\% solve \%>\% plot -> eau  ## 'easy' game from 3 days ago
 }
 }
 \author{

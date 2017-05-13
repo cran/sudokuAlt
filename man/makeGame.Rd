@@ -4,7 +4,7 @@
 \alias{makeGame}
 \title{Make a New Sudoku Game}
 \usage{
-makeGame(n = 3, gaps = ceiling(2 * n^4/3), maxit = 5)
+makeGame(n = 3, gaps = ceiling(3 * n^4/4), maxit = 5)
 }
 \arguments{
 \item{n}{Size of the game, n^2 x n^2}
@@ -25,9 +25,9 @@ n = 5 can be problematical.
 }
 \examples{
 set.seed(54321)
-(m <- makeGame())
-sm <- solve(m)
-plot(sm)
+makeGame() \%>\% solve \%>\% plot -> sg
+originalGame(sg)
+
 }
 \author{
 Bill Venables

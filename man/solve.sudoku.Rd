@@ -22,13 +22,13 @@ An alternative front end to \code{solveGame} as a method for the base generic fu
 }
 \examples{
 set.seed(1234)
-(g <- makeGame(3))
-(sg <- solve(g))
-plot(sg)
+makeGame(3, gaps = 59) \%>\% solve \%>\% plot -> sg
+originalGame(sg)
+
 g <- emptyGame(4)  # construct a patterned game
 diag(g) <- LETTERS[1:16]
-sg <- solve(g)
-plot(sg)
+g \%>\% solve \%>\% plot -> sg
+sg
 }
 \author{
 Bill Venables

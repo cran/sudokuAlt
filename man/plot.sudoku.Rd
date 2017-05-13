@@ -18,6 +18,9 @@
 
 \item{colGame}{colour to be used for the original game}
 }
+\value{
+The sudoku game \code{x}, invisibly.
+}
 \description{
 Plot a Sudoku Game
 }
@@ -27,7 +30,7 @@ the game is solved
 }
 \examples{
 set.seed(1234)
-plot(solve(seedGame(4)))
+seedGame(4) \%>\% solve \%>\% plot -> sg
 }
 \author{
 Bill Venables

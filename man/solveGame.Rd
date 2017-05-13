@@ -23,9 +23,9 @@ n=2 or 3, and LETTERS[1:(n^2)] for n = 4 or 5.
 }
 \examples{
 set.seed(1234)
-(g <- makeGame(3))
-(sg <- solveGame(g))
-plot(sg)
+makeGame(3, gaps = 60) \%>\% solve \%>\% plot -> sg
+(g <- originalGame(sg))
+
 g <- emptyGame(4)  # construct a patterned game
 diag(g) <- LETTERS[1:16]
 sg <- solve(g)

@@ -29,6 +29,7 @@ if(require(sudoku)) {  ## the original solver
   g0a <- as.sudoku(fetchSudokuUK())  
   identical(g0, g0a)   ## should be TRUE
 }
+g0 \%>\% solve \%>\% plot -> sg0 ## spoil the game
 }
 }
 \author{

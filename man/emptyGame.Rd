@@ -22,8 +22,7 @@ be constructed, as shown in the example.
 \examples{
 g <- emptyGame(4)
 diag(g) <- LETTERS[1:16]
-sg <- solve(g)
-plot(sg)
+g \%>\% solve \%>\% plot -> sg ## \%>\% imported from magrittr
 }
 \author{
 Bill Venables
