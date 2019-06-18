@@ -4,8 +4,8 @@
 \alias{plot.sudoku}
 \title{Plot a Sudoku Game}
 \usage{
-\method{plot}{sudoku}(x, ..., cex = 2 - (n - 3)/2, colSolution = "grey",
-  colGame = "fire brick")
+\method{plot}{sudoku}(x, ..., cex = 1.5 - (n - 3)/2,
+  colSolution = "grey", colGame = "fire brick")
 }
 \arguments{
 \item{x}{The sudoku game}
@@ -29,8 +29,8 @@ Present a graphical display of a sudoku game and its solution if
 the game is solved
 }
 \examples{
-set.seed(1234)
-seedGame(4) \%>\% solve \%>\% plot -> sg
+set.seed(20191)
+makeGame(4, gaps = 0) \%>\% plot(cex=1) -> sg
 }
 \author{
 Bill Venables

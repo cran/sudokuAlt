@@ -11,7 +11,7 @@ solveGame(game)
 }
 \value{
 A solved sudoku game object if one found, or NULL if no
-solution exists.  The original game is attached as an attribute.
+solution exists.  The original game is attached as an attribute if the game is solved.
 }
 \description{
 Solve a Sudoku Game

@@ -4,7 +4,7 @@
 \alias{makeGame}
 \title{Make a New Sudoku Game}
 \usage{
-makeGame(n = 3, gaps = ceiling(3 * n^4/4), maxit = 5)
+makeGame(n = 3, gaps = ceiling(3 * n^4/4), maxit = 25)
 }
 \arguments{
 \item{n}{Size of the game, n^2 x n^2}

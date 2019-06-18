@@ -1,7 +1,12 @@
-##' @import magrittr
+##' @importFrom magrittr %>%
 ##' @export 
-magrittr::`%>%` 
+magrittr::`%>%`
 
+##' @importFrom stats runif
+##' 
+sample <- function(n, k) {
+  (1:n)[order(runif(n))][1:k]
+}
 
 ##' Construct a Sudoku Game Object
 ##'
@@ -159,7 +164,6 @@ fetchAUGame <- function(day = 0, difficulty = c("tough", "hard", "medium", "easy
   as.sudoku(txt)
 }
 
-
 ##' Construct a Random Sudoku Game
 ##'
 ##' Construcs a sudoku game for given n, 2 <= n <= 5.
@@ -176,15 +180,17 @@ fetchAUGame <- function(day = 0, difficulty = c("tough", "hard", "medium", "easy
 ##' @return a sudoku game
 ##' @export makeGame
 ##' @author Bill Venables
-makeGame <- function(n = 3, gaps = ceiling(3*n^4/4), maxit = 5) {
-  if(!missing(n) && (3 > n || n > 5))
-      stop("Only cases n = 3, 4 or 5 are implemented. Sorry!")
-  solved <- FALSE
+makeGame <- function(n = 3, gaps = ceiling(3*n^4/4), maxit = 25) {
+  if(!missing(n) && (2 > n || n > 5))
+      stop("Only cases n = 2, 3, 4 or 5 are implemented. Sorry!")
+  solved <- NULL
   iter <- 0
-  while(identical(solved, FALSE) && (iter <- iter+1) < maxit) 
-      solved <- solveGame(seedGame(n))
-  
-  if(iter == maxit) stop("Maximum number of tries exceeded.")
+  while(identical(solved, NULL) && (iter <- iter+1) < maxit) {
+    solved <- solveGame(seedGame(n))
+  }
+  if(iter == maxit) {
+    stop("Maximum number of tries exceeded.")
+  }
   is.na(solved[sample(length(solved), gaps)]) <- TRUE
   attr(solved, "game") <- NULL
   solved
@@ -205,10 +211,10 @@ makeGame <- function(n = 3, gaps = ceiling(3*n^4/4), maxit = 5) {
 ##' @param colGame colour to be used for the original game
 ##' @return The sudoku game \code{x}, invisibly.
 ##' @examples
-##' set.seed(1234)
-##' seedGame(4) %>% solve %>% plot -> sg
+##' set.seed(20191)
+##' makeGame(4, gaps = 0) %>% plot(cex=1) -> sg
 ##' @author Bill Venables
-plot.sudoku <- function(x, ..., cex=2-(n-3)/2,
+plot.sudoku <- function(x, ..., cex=1.5-(n-3)/2,
                         colSolution = "grey", colGame = "fire brick") {
   oldPar <- par(mar = rep(0, 4)+0.1, ...,
                 xaxs = "i", xaxt = "n",
@@ -226,7 +232,7 @@ plot.sudoku <- function(x, ..., cex=2-(n-3)/2,
                      col = if(solved) colSolution else colGame,
                      font = if(solved) 1 else 2))
   if(solved) {
-    with(centres, text(X, Y, t(game), cex = cex, col=colGame, font=2))
+    with(centres, text(X, Y, t(game), cex = cex, col=colGame, font = 2))
   }
   invisible(x)
 }
@@ -323,7 +329,7 @@ solve.sudoku <- function(a, ...) {
 ##' @title Solve a Sudoku Game
 ##' @param game The game to be solved
 ##' @return A solved sudoku game object if one found, or NULL if no
-##' solution exists.  The original game is attached as an attribute.
+##' solution exists.  The original game is attached as an attribute if the game is solved.
 ##' @importFrom stats na.omit
 ##' @examples
 ##' set.seed(1234)
@@ -443,7 +449,8 @@ originalGame <- function(x) {
 ##' @examples
 ##' g <- emptyGame(4)
 ##' diag(g) <- LETTERS[1:16]
-##' g %>% solve %>% plot -> sg ## %>% imported from magrittr
+##' plot(g)
+##' g %>% solve %>% plot -> sg ## %>% imported from magrittr 
 ##' @export emptyGame
 ##' @author Bill Venables
 emptyGame <- function(n = 3) {
@@ -451,3 +458,113 @@ emptyGame <- function(n = 3) {
     stop("n must be a single integer between 2 and 5 inclusive")
   structure(matrix(NA_character_, n^2, n^2), class = "sudoku")
 }
+
+##' Put a solved sudoku game into a canonical form
+##'
+##' If a solved sudoku game is to be used as an experimental
+##' design it is sometimes useful to re-arrange the symbols
+##' so that either the first row, first column or top left
+##' block symbols are in sorted order.  This function accomplishes
+##' this task.
+##' 
+##' @title regulariseGame
+##' @param g a solved sudoku game
+##' @param target character; which section do you want to be in sorted order?
+##' @param ... additional arguments to methods (currently not used)
+##' @return a regularised solved sudoku game
+##' @export
+##' @examples
+##' set.seed(1234)
+##' g <- makeGame() %>%
+##'      solve() %>%    
+##'      regulariseGame(target = "b") %>% 
+##'      plot()
+##' plot(originalGame(g))
+regulariseGame <- function(g, ...) {
+  UseMethod("regulariseGame")
+}
+
+##' @rdname regulariseGame
+##' @export
+regulariseGame.sudoku <- function(g, target = c("block", "col", "row"), ...) {
+  if(anyNA(g))
+    stop("only fully solved games can be regularised")
+  target <- match.arg(target)
+  n <- ncol(g)
+  v <- switch(target,
+              row = g[1, 1:n],
+              col = g[1:n, 1],
+              block = {
+                n <- round(sqrt(n))
+                as.vector(t(g[1:n, 1:n]))
+              })
+  s <- sort(v)
+  names(s) <- v
+  g[] <- s[as.vector(g)]
+  if(!is.null(attr(g, "game"))) {
+    game <- attr(g, "game")
+    game[] <- s[as.vector(game)]
+    attr(g, "game") <- game
+  }
+  g
+}
+
+##' @rdname regulariseGame
+##' @export
+regulariseGame.default <- function(g, ...) {
+  stop("no applicable method for objects of class ", class(g))
+}
+
+
+#' Sudoku Design
+#' 
+#' Take a sudoku game and represent the information as a data
+#' frame giving the row, column, square and symbol for each entry.
+#' This is a useful form if the (complete) game is to be used as
+#' an experimental design
+#'
+#' @param g a sudoku game, presumably solved
+#' @param ... currently ignored
+#'
+#' @return a data frame with four colums, \code{Row}, \code{Col},
+#'  \code{Square} and \code{Symbol}
+#' @export
+#'
+#' @examples
+#' set.seed(2019)
+#' d <- seedGame(4) %>% solve() %>%
+#'      regulariseGame(target = "b") %>%
+#'      designGame()
+#' rbind(head(d), tail(d))
+designGame <- function(g, ...) {
+  UseMethod("designGame")
+}
+
+#' @rdname designGame
+#' @export
+designGame.default <- function(g, ...) {
+  stop("no applicable method for objects of class ", class(g))
+}
+  
+.zf <- function(x) {
+  m <- max(n <- nchar(x <- as.character(x)))
+  paste0(strrep(0, m-n), x)
+}
+
+#' @rdname designGame
+#' @export
+designGame.sudoku <- function(g, ...) {
+  n <- round(sqrt(nrow(g)))
+  l <- ifelse(n > 3, "", "L")
+  d <- data.frame(Row = paste0("R", .zf(row(g))),
+                  Col = paste0("C", .zf(col(g))),
+                  Square = paste0("S", 
+                                  .zf(((row(g)-1) %/% n) + 1),
+                                  .zf(((col(g)-1) %/% n) + 1)),
+                  Symbol = paste0(l, as.vector(unclass(g))))
+  d <- with(d, d[order(Square, Row, Col), ])
+  row.names(d) <- .zf(seq(nrow(d)))
+  d
+}
+  
+  
