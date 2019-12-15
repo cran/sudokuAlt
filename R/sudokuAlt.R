@@ -191,7 +191,7 @@ makeGame <- function(n = 3, gaps = ceiling(3*n^4/4), maxit = 25) {
   if(iter == maxit) {
     stop("Maximum number of tries exceeded.")
   }
-  is.na(solved[sample(length(solved), gaps)]) <- TRUE
+  if(gaps > 0) is.na(solved[sample(length(solved), gaps)]) <- TRUE
   attr(solved, "game") <- NULL
   solved
 }

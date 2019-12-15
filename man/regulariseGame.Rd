@@ -8,8 +8,7 @@
 \usage{
 regulariseGame(g, ...)
 
-\method{regulariseGame}{sudoku}(g, target = c("block", "col", "row"),
-  ...)
+\method{regulariseGame}{sudoku}(g, target = c("block", "col", "row"), ...)
 
 \method{regulariseGame}{default}(g, ...)
 }

@@ -4,8 +4,13 @@
 \alias{plot.sudoku}
 \title{Plot a Sudoku Game}
 \usage{
-\method{plot}{sudoku}(x, ..., cex = 1.5 - (n - 3)/2,
-  colSolution = "grey", colGame = "fire brick")
+\method{plot}{sudoku}(
+  x,
+  ...,
+  cex = 1.5 - (n - 3)/2,
+  colSolution = "grey",
+  colGame = "fire brick"
+)
 }
 \arguments{
 \item{x}{The sudoku game}

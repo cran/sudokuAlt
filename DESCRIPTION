@@ -1,8 +1,8 @@
 Package: sudokuAlt
 Type: Package
 Title: Tools for Making and Spoiling Sudoku Games
-Version: 0.2-0
-Date: 2019-06-16
+Version: 0.2-1
+Date: 2019-12-15
 Depends: R (>= 3.5.0), stats
 Suggests: sudoku, knitr, rmarkdown
 Imports: graphics, magrittr
@@ -17,8 +17,8 @@ Description: Tools for making, retrieving, displaying and solving sudoku games.
 License: GPL (>= 2)
 NeedsCompilation: no
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 VignetteBuilder: knitr
-Packaged: 2019-06-18 00:03:57 UTC; ven037
+Packaged: 2019-12-15 05:10:41 UTC; Bill Venables
 Repository: CRAN
-Date/Publication: 2019-06-18 05:10:03 UTC
+Date/Publication: 2019-12-15 06:50:02 UTC
